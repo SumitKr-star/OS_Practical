@@ -253,72 +253,112 @@ g++ copy.cpp -o copy
 
 ## 8.FIFO
 ```
-#include <iomanip>
-#include <iostream>
 
-int main() {
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
     int n;
     int bt[20], wt[20], tat[20];
-    double avg_wt = 0.0, avg_tat = 0.0;
 
-    std::cout << "Enter number of processes: ";
-    std::cin >> n;
+    double avg_wt = 0.0;
+    double avg_tat = 0.0;
 
-    for (int i = 0; i < n; i++) {
-        std::cout << "Enter burst time P" << (i + 1) << ": ";
-        std::cin >> bt[i];
+    cout << "Enter number of processes: ";
+    cin >> n;
+
+    if (n <= 0 || n > 20)
+    {
+        cout << "Enter processes between 1 and 20";
+        return 1;
     }
 
+    // Input burst time
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter burst time P" << i + 1 << ": ";
+        cin >> bt[i];
+    }
+
+    // Calculate waiting time
     wt[0] = 0;
 
-    for (int i = 1; i < n; i++) {
+    for (int i = 1; i < n; i++)
+    {
         wt[i] = wt[i - 1] + bt[i - 1];
     }
 
-    std::cout << "\nProcess\tBT\tWT\tTAT\n";
+    // Display process details
+    cout << "\nProcess\tBT\tWT\tTAT\n";
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         tat[i] = wt[i] + bt[i];
 
         avg_wt += wt[i];
         avg_tat += tat[i];
 
-        std::cout << "P" << (i + 1) << "\t"
-                  << bt[i] << "\t"
-                  << wt[i] << "\t"
-                  << tat[i] << "\n";
+        cout << "P" << i + 1 << "\t"
+             << bt[i] << "\t"
+             << wt[i] << "\t"
+             << tat[i] << "\n";
     }
 
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << "\nAverage Waiting Time: " << (avg_wt / n);
-    std::cout << "\nAverage Turnaround Time: " << (avg_tat / n) << "\n";
+    // Calculate averages
+    avg_wt = avg_wt / n;
+    avg_tat = avg_tat / n;
+
+    cout << fixed << setprecision(2);
+
+    cout << "\nAverage Waiting Time: " << avg_wt;
+    cout << "\nAverage Turnaround Time: " << avg_tat << "\n";
 
     return 0;
 }
+
 ```
 ### SJF
 ```
-#include <iomanip>
-#include <iostream>
 
-int main() {
+#include <iostream>
+#include <iomanip>
+using namespace std;
+
+int main()
+{
     int n;
     int pid[20], bt[20], wt[20], tat[20];
-    double avg_wt = 0.0, avg_tat = 0.0;
 
-    std::cout << "Enter number of processes: ";
-    std::cin >> n;
+    double avg_wt = 0.0;
+    double avg_tat = 0.0;
 
-    for (int i = 0; i < n; i++) {
-        pid[i] = i + 1;
-        std::cout << "Enter burst time P" << pid[i] << ": ";
-        std::cin >> bt[i];
+    cout << "Enter number of processes: ";
+    cin >> n;
+
+    if (n <= 0 || n > 20)
+    {
+        cout << "Enter processes between 1 and 20";
+        return 1;
     }
 
-    // Sort processes by burst time (shortest job first)
-    for (int i = 0; i < n - 1; i++) {
-        for (int j = 0; j < n - i - 1; j++) {
-            if (bt[j] > bt[j + 1]) {
+    // Input burst time
+    for (int i = 0; i < n; i++)
+    {
+        pid[i] = i + 1;
+
+        cout << "Enter burst time P" << pid[i] << ": ";
+        cin >> bt[i];
+    }
+
+    // Sort processes according to burst time
+    for (int i = 0; i < n - 1; i++)
+    {
+        for (int j = 0; j < n - i - 1; j++)
+        {
+            if (bt[j] > bt[j + 1])
+            {
                 int temp_bt = bt[j];
                 bt[j] = bt[j + 1];
                 bt[j + 1] = temp_bt;
@@ -330,27 +370,38 @@ int main() {
         }
     }
 
+    // Calculate waiting time
     wt[0] = 0;
-    for (int i = 1; i < n; i++) {
+
+    for (int i = 1; i < n; i++)
+    {
         wt[i] = wt[i - 1] + bt[i - 1];
     }
 
-    std::cout << "\nProcess\tBT\tWT\tTAT\n";
+    // Display process details
+    cout << "\nProcess\tBT\tWT\tTAT\n";
 
-    for (int i = 0; i < n; i++) {
+    for (int i = 0; i < n; i++)
+    {
         tat[i] = wt[i] + bt[i];
+
         avg_wt += wt[i];
         avg_tat += tat[i];
 
-        std::cout << "P" << pid[i] << "\t"
-                  << bt[i] << "\t"
-                  << wt[i] << "\t"
-                  << tat[i] << "\n";
+        cout << "P" << pid[i] << "\t"
+             << bt[i] << "\t"
+             << wt[i] << "\t"
+             << tat[i] << "\n";
     }
 
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << "\nAverage Waiting Time: " << (avg_wt / n);
-    std::cout << "\nAverage Turnaround Time: " << (avg_tat / n) << "\n";
+    // Calculate averages
+    avg_wt = avg_wt / n;
+    avg_tat = avg_tat / n;
+
+    cout << fixed << setprecision(2);
+
+    cout << "\nAverage Waiting Time: " << avg_wt;
+    cout << "\nAverage Turnaround Time: " << avg_tat << "\n";
 
     return 0;
 }
@@ -358,75 +409,112 @@ int main() {
 
 ### SRTF
 ```
-#include <climits>
-#include <iomanip>
-#include <iostream>
 
-int main() {
+#include <iostream>
+#include <iomanip>
+#include <climits>
+using namespace std;
+
+int main()
+{
     int n;
     int at[20], bt[20], rt[20], wt[20], tat[20];
-    double avg_wt = 0.0, avg_tat = 0.0;
 
-    std::cout << "Enter number of processes: ";
-    std::cin >> n;
+    double avg_wt = 0.0;
+    double avg_tat = 0.0;
 
-    for (int i = 0; i < n; i++) {
-        std::cout << "Enter arrival time P" << (i + 1) << ": ";
-        std::cin >> at[i];
-        std::cout << "Enter burst time P" << (i + 1) << ": ";
-        std::cin >> bt[i];
+    cout << "Enter number of processes: ";
+    cin >> n;
+
+    if (n <= 0 || n > 20)
+    {
+        cout << "Enter processes between 1 and 20";
+        return 1;
+    }
+
+    // Input arrival and burst time
+    for (int i = 0; i < n; i++)
+    {
+        cout << "Enter arrival time P" << i + 1 << ": ";
+        cin >> at[i];
+
+        cout << "Enter burst time P" << i + 1 << ": ";
+        cin >> bt[i];
+
+        if (at[i] < 0 || bt[i] <= 0)
+        {
+            cout << "Invalid arrival or burst time!";
+            return 1;
+        }
+
         rt[i] = bt[i];
     }
 
     int completed = 0;
     int time = 0;
 
-    while (completed < n) {
+    // SRTF Scheduling
+    while (completed < n)
+    {
         int shortest = -1;
         int min_rt = INT_MAX;
 
-        for (int i = 0; i < n; i++) {
-            if (at[i] <= time && rt[i] > 0 && rt[i] < min_rt) {
+        for (int i = 0; i < n; i++)
+        {
+            if (at[i] <= time &&
+                rt[i] > 0 &&
+                rt[i] < min_rt)
+            {
                 min_rt = rt[i];
                 shortest = i;
             }
         }
 
-        if (shortest == -1) {
+        if (shortest == -1)
+        {
             time++;
             continue;
         }
 
+        // Execute process for one time unit
         rt[shortest]--;
         time++;
 
-        if (rt[shortest] == 0) {
+        // Check process completion
+        if (rt[shortest] == 0)
+        {
             completed++;
+
             int finish_time = time;
+
             tat[shortest] = finish_time - at[shortest];
             wt[shortest] = tat[shortest] - bt[shortest];
-            if (wt[shortest] < 0) {
-                wt[shortest] = 0;
-            }
 
             avg_wt += wt[shortest];
             avg_tat += tat[shortest];
         }
     }
 
-    std::cout << "\nProcess\tAT\tBT\tWT\tTAT\n";
+    // Display results
+    cout << "\nProcess\tAT\tBT\tWT\tTAT\n";
 
-    for (int i = 0; i < n; i++) {
-        std::cout << "P" << (i + 1) << "\t"
-                  << at[i] << "\t"
-                  << bt[i] << "\t"
-                  << wt[i] << "\t"
-                  << tat[i] << "\n";
+    for (int i = 0; i < n; i++)
+    {
+        cout << "P" << i + 1 << "\t"
+             << at[i] << "\t"
+             << bt[i] << "\t"
+             << wt[i] << "\t"
+             << tat[i] << "\n";
     }
 
-    std::cout << std::fixed << std::setprecision(2);
-    std::cout << "\nAverage Waiting Time: " << (avg_wt / n);
-    std::cout << "\nAverage Turnaround Time: " << (avg_tat / n) << "\n";
+    // Calculate average
+    avg_wt = avg_wt / n;
+    avg_tat = avg_tat / n;
+
+    cout << fixed << setprecision(2);
+
+    cout << "\nAverage Waiting Time: " << avg_wt;
+    cout << "\nAverage Turnaround Time: " << avg_tat << "\n";
 
     return 0;
 }
