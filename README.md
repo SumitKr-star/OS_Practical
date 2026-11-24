@@ -1,1 +1,1 @@
-# OS_Practical
+# OS Practical
