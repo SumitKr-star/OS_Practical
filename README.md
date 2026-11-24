@@ -53,48 +53,39 @@ int main()
 
 ## 4. Linux Kernel and CPU Information
 ```
-
-#include <stdio.h>
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <string>
 #include <sys/utsname.h>
-#include <string.h>
 
-int main()
-{
-    struct utsname info;
+int main() {
+    utsname info{};
 
-    if (uname(&info) == -1)
-    {
-        perror("uname");
+    if (uname(&info) == -1) {
+        std::perror("uname");
         return 1;
     }
 
-    printf("Operating System: %s\n", info.sysname);
-    printf("Node Name: %s\n", info.nodename);
-    printf("Kernel Release: %s\n", info.release);
-    printf("Kernel Version: %s\n", info.version);
-    printf("Machine: %s\n", info.machine);
+    std::cout << "Operating System: " << info.sysname << "\n";
+    std::cout << "Node Name: " << info.nodename << "\n";
+    std::cout << "Kernel Release: " << info.release << "\n";
+    std::cout << "Kernel Version: " << info.version << "\n";
+    std::cout << "Machine: " << info.machine << "\n";
 
-    FILE *fp = fopen("/proc/cpuinfo", "r");
-
-    if (fp == NULL)
-    {
-        perror("File opening failed");
+    std::ifstream fp("/proc/cpuinfo");
+    if (!fp.is_open()) {
+        std::perror("File opening failed");
         return 1;
     }
 
-    char line[256];
-
-    while (fgets(line, sizeof(line), fp))
-    {
-        if (strncmp(line, "model name", 10) == 0 ||
-            strncmp(line, "Hardware", 8) == 0)
-        {
-            printf("CPU Model: %s", line);
+    std::string line;
+    while (std::getline(fp, line)) {
+        if (line.rfind("model name", 0) == 0 || line.rfind("Hardware", 0) == 0) {
+            std::cout << "CPU Model: " << line << "\n";
             break;
         }
     }
-
-    fclose(fp);
 
     return 0;
 }
@@ -105,39 +96,44 @@ cat /proc/cpuinfo
 
 ## 5. Linux Memory Information
 ```
+#include <cstdio>
+#include <fstream>
+#include <iostream>
+#include <sstream>
+#include <string>
 
-#include <stdio.h>
-
-int main()
-{
-    FILE *fp;
-    char line[256];
+int main() {
+    std::ifstream fp("/proc/meminfo");
+    if (!fp.is_open()) {
+        std::perror("File opening failed");
+        return 1;
+    }
 
     long total = 0;
     long free_mem = 0;
     long available = 0;
 
-    fp = fopen("/proc/meminfo", "r");
+    std::string line;
+    while (std::getline(fp, line)) {
+        std::istringstream iss(line);
+        std::string key;
+        long value = 0;
 
-    if (fp == NULL)
-    {
-        perror("File opening failed");
-        return 1;
+        if (iss >> key >> value) {
+            if (key == "MemTotal:") {
+                total = value;
+            } else if (key == "MemFree:") {
+                free_mem = value;
+            } else if (key == "MemAvailable:") {
+                available = value;
+            }
+        }
     }
 
-    while (fgets(line, sizeof(line), fp))
-    {
-        sscanf(line, "MemTotal: %ld", &total);
-        sscanf(line, "MemFree: %ld", &free_mem);
-        sscanf(line, "MemAvailable: %ld", &available);
-    }
-
-    fclose(fp);
-
-    printf("Total Memory: %ld kB\n", total);
-    printf("Free Memory: %ld kB\n", free_mem);
-    printf("Available Memory: %ld kB\n", available);
-    printf("Used Memory: %ld kB\n", total - free_mem);
+    std::cout << "Total Memory: " << total << " kB\n";
+    std::cout << "Free Memory: " << free_mem << " kB\n";
+    std::cout << "Available Memory: " << available << " kB\n";
+    std::cout << "Used Memory: " << (total - free_mem) << " kB\n";
 
     return 0;
 }
