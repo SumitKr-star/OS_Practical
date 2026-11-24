@@ -376,5 +376,137 @@ int main() {
 ```
 
 
+## 9. Sum of Numbers Using Pthreads
+```
+#include <iostream>
+#include <thread>
+
+int a[100];
+int sum1 = 0, sum2 = 0;
+int n = 0;
+
+void first_thread() {
+    for (int i = 0; i < n / 2; i++) {
+        sum1 += a[i];
+    }
+}
+
+void second_thread() {
+    for (int i = n / 2; i < n; i++) {
+        sum2 += a[i];
+    }
+}
+
+int main() {
+    std::cout << "Enter even number of elements: ";
+    std::cin >> n;
+
+    if (n <= 0 || n > 100 || n % 2 != 0) {
+        std::cout << "Enter an even number between 2 and 100\n";
+        return 1;
+    }
+
+    std::cout << "Enter numbers:\n";
+    for (int i = 0; i < n; i++) {
+        std::cin >> a[i];
+    }
+
+    std::thread t1(first_thread);
+    std::thread t2(second_thread);
+
+    t1.join();
+    t2.join();
+
+    std::cout << "First Thread Sum: " << sum1 << "\n";
+    std::cout << "Second Thread Sum: " << sum2 << "\n";
+    std::cout << "Total Sum: " << (sum1 + sum2) << "\n";
+
+    return 0;
+}
+```
+
+## 10. Memory Allocation Strategies
+```
+#include <iostream>
+
+int main() {
+    int b[20], p[20];
+    int nb, np;
+
+    std::cout << "Enter number of memory blocks: ";
+    std::cin >> nb;
+
+    std::cout << "Enter block sizes:\n";
+    for (int i = 0; i < nb; i++) {
+        std::cin >> b[i];
+    }
+
+    std::cout << "Enter number of processes: ";
+    std::cin >> np;
+
+    std::cout << "Enter process sizes:\n";
+    for (int i = 0; i < np; i++) {
+        std::cin >> p[i];
+    }
+
+    int choice;
+    std::cout << "\n1. First Fit";
+    std::cout << "\n2. Best Fit";
+    std::cout << "\n3. Worst Fit";
+    std::cout << "\nEnter choice: ";
+    std::cin >> choice;
+
+    int temp[20], allocated[20];
+
+    for (int i = 0; i < nb; i++) {
+        temp[i] = b[i];
+    }
+
+    for (int i = 0; i < np; i++) {
+        allocated[i] = -1;
+    }
+
+    for (int i = 0; i < np; i++) {
+        int index = -1;
+
+        for (int j = 0; j < nb; j++) {
+            if (temp[j] >= p[i]) {
+                if (choice == 1) {
+                    index = j;
+                    break;
+                }
+                if (choice == 2) {
+                    if (index == -1 || temp[j] < temp[index]) {
+                        index = j;
+                    }
+                }
+                if (choice == 3) {
+                    if (index == -1 || temp[j] > temp[index]) {
+                        index = j;
+                    }
+                }
+            }
+        }
+
+        if (index != -1) {
+            allocated[i] = index;
+            temp[index] -= p[i];
+        }
+    }
+
+    std::cout << "\nProcess\tSize\tBlock\n";
+    for (int i = 0; i < np; i++) {
+        std::cout << "P" << (i + 1) << "\t" << p[i] << "\t";
+        if (allocated[i] == -1) {
+            std::cout << "Not Allocated\n";
+        } else {
+            std::cout << "B" << (allocated[i] + 1) << "\n";
+        }
+    }
+
+    return 0;
+}
+```
+
 
 
