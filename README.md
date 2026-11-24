@@ -423,9 +423,12 @@ int main() {
 
 ## 10. Memory Allocation Strategies
 ```
+
 #include <iostream>
-using namespcae std;
-int main() {
+using namespace std;
+
+int main()
+{
     int b[20], p[20];
     int nb, np;
 
@@ -433,7 +436,8 @@ int main() {
     cin >> nb;
 
     cout << "Enter block sizes:\n";
-    for (int i = 0; i < nb; i++) {
+    for (int i = 0; i < nb; i++)
+    {
         cin >> b[i];
     }
 
@@ -441,67 +445,101 @@ int main() {
     cin >> np;
 
     cout << "Enter process sizes:\n";
-    for (int i = 0; i < np; i++) {
-        std::cin >> p[i];
+    for (int i = 0; i < np; i++)
+    {
+        cin >> p[i];
     }
 
     int choice;
+
     cout << "\n1. First Fit";
     cout << "\n2. Best Fit";
     cout << "\n3. Worst Fit";
+
     cout << "\nEnter choice: ";
     cin >> choice;
 
+    if (choice < 1 || choice > 3)
+    {
+        cout << "Invalid choice!";
+        return 0;
+    }
+
     int temp[20], allocated[20];
 
-    for (int i = 0; i < nb; i++) {
+    // Copy block sizes
+    for (int i = 0; i < nb; i++)
+    {
         temp[i] = b[i];
     }
 
-    for (int i = 0; i < np; i++) {
+    // Initialize allocation
+    for (int i = 0; i < np; i++)
+    {
         allocated[i] = -1;
     }
 
-    for (int i = 0; i < np; i++) {
+    // Memory allocation
+    for (int i = 0; i < np; i++)
+    {
         int index = -1;
 
-        for (int j = 0; j < nb; j++) {
-            if (temp[j] >= p[i]) {
-                if (choice == 1) {
+        for (int j = 0; j < nb; j++)
+        {
+            if (temp[j] >= p[i])
+            {
+                if (choice == 1)
+                {
                     index = j;
                     break;
                 }
-                if (choice == 2) {
-                    if (index == -1 || temp[j] < temp[index]) {
+
+                if (choice == 2)
+                {
+                    if (index == -1 || temp[j] < temp[index])
+                    {
                         index = j;
                     }
                 }
-                if (choice == 3) {
-                    if (index == -1 || temp[j] > temp[index]) {
+
+                if (choice == 3)
+                {
+                    if (index == -1 || temp[j] > temp[index])
+                    {
                         index = j;
                     }
                 }
             }
         }
 
-        if (index != -1) {
+        if (index != -1)
+        {
             allocated[i] = index;
             temp[index] -= p[i];
         }
     }
 
+    // Display result
     cout << "\nProcess\tSize\tBlock\n";
-    for (int i = 0; i < np; i++) {
-        cout << "P" << (i + 1) << "\t" << p[i] << "\t";
-        if (allocated[i] == -1) {
+
+    for (int i = 0; i < np; i++)
+    {
+        cout << "P" << i + 1 << "\t"
+             << p[i] << "\t";
+
+        if (allocated[i] == -1)
+        {
             cout << "Not Allocated\n";
-        } else {
-            cout << "B" << (allocated[i] + 1) << "\n";
+        }
+        else
+        {
+            cout << "B" << allocated[i] + 1 << "\n";
         }
     }
 
     return 0;
 }
+
 ```
 
 
