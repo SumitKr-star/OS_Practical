@@ -53,42 +53,58 @@ int main()
 
 ## 4. Linux Kernel and CPU Information
 ```
-#include <cstdio>
-#include <fstream>
+
 #include <iostream>
+#include <fstream>
 #include <string>
+#include <cstdio>
 #include <sys/utsname.h>
 
-int main() {
-    utsname info{};
+using namespace std;
 
-    if (uname(&info) == -1) {
-        std::perror("uname");
+int main()
+{
+    struct utsname info;
+
+    // Get operating system information
+    if (uname(&info) == -1)
+    {
+        perror("uname");
         return 1;
     }
 
-    std::cout << "Operating System: " << info.sysname << "\n";
-    std::cout << "Node Name: " << info.nodename << "\n";
-    std::cout << "Kernel Release: " << info.release << "\n";
-    std::cout << "Kernel Version: " << info.version << "\n";
-    std::cout << "Machine: " << info.machine << "\n";
+    cout << "Operating System: " << info.sysname << "\n";
+    cout << "Node Name: " << info.nodename << "\n";
+    cout << "Kernel Release: " << info.release << "\n";
+    cout << "Kernel Version: " << info.version << "\n";
+    cout << "Machine: " << info.machine << "\n";
 
-    std::ifstream fp("/proc/cpuinfo");
-    if (!fp.is_open()) {
-        std::perror("File opening failed");
+    // Read CPU information
+    ifstream fp("/proc/cpuinfo");
+
+    if (!fp.is_open())
+    {
+        cout << "File opening failed\n";
         return 1;
     }
 
-    std::string line;
-    while (std::getline(fp, line)) {
-        if (line.rfind("model name", 0) == 0 || line.rfind("Hardware", 0) == 0) {
-            std::cout << "CPU Model: " << line << "\n";
+    string line;
+
+    while (getline(fp, line))
+    {
+        if (line.rfind("model name", 0) == 0 ||
+            line.rfind("Hardware", 0) == 0)
+        {
+            cout << "CPU Model: " << line << "\n";
             break;
         }
     }
 
+    fp.close();
+
     return 0;
 }
+
 ```
 ```
 cat /proc/cpuinfo
