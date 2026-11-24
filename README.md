@@ -177,47 +177,72 @@ int main()
 
 ## 6. Copy Files Using System Calls 
 ```
-#include <fstream>
-#include <iostream>
 
-int main() {
-    std::ifstream source("source.txt", std::ios::binary);
-    if (!source.is_open()) {
-        std::perror("Source file error");
+#include <iostream>
+#include <fstream>
+#include <cstdio>
+
+using namespace std;
+
+int main()
+{
+    // Open source file
+    ifstream source("source.txt", ios::binary);
+
+    if (!source.is_open())
+    {
+        cout << "Source file error\n";
         return 1;
     }
 
-    std::ofstream destination("destination.txt", std::ios::binary | std::ios::trunc);
-    if (!destination.is_open()) {
-        std::perror("Destination file error");
+    // Open destination file
+    ofstream destination("destination.txt",
+                         ios::binary | ios::trunc);
+
+    if (!destination.is_open())
+    {
+        cout << "Destination file error\n";
         return 1;
     }
 
     char buffer[100];
 
-    while (source.read(buffer, sizeof(buffer))) {
+    // Copy file contents
+    while (source.read(buffer, sizeof(buffer)))
+    {
         destination.write(buffer, source.gcount());
-        if (!destination) {
-            std::perror("Write error");
+
+        if (!destination)
+        {
+            cout << "Write error\n";
             return 1;
         }
     }
 
-    // Write any remaining partial chunk read before EOF
-    if (source.gcount() > 0) {
+    // Copy remaining data
+    if (source.gcount() > 0)
+    {
         destination.write(buffer, source.gcount());
-        if (!destination) {
-            std::perror("Write error");
+
+        if (!destination)
+        {
+            cout << "Write error\n";
             return 1;
         }
     }
 
-    if (source.bad()) {
-        std::perror("Read error");
+    // Check read error
+    if (source.bad())
+    {
+        cout << "Read error\n";
         return 1;
     }
 
-    std::cout << "File copied successfully!\n";
+    cout << "File copied successfully!\n";
+
+    source.close();
+    destination.close();
+
     return 0;
 }
 ```
