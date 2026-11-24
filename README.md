@@ -374,48 +374,61 @@ int main() {
 
 ## 9. Sum of Numbers Using Pthreads
 ```
+
 #include <iostream>
 #include <thread>
+using namespace std;
 
 int a[100];
 int sum1 = 0, sum2 = 0;
-int n = 0;
+int n;
 
-void first_thread() {
-    for (int i = 0; i < n / 2; i++) {
+void first_thread()
+{
+    for (int i = 0; i < n / 2; i++)
+    {
         sum1 += a[i];
     }
 }
 
-void second_thread() {
-    for (int i = n / 2; i < n; i++) {
+void second_thread()
+{
+    for (int i = n / 2; i < n; i++)
+    {
         sum2 += a[i];
     }
 }
 
-int main() {
-    std::cout << "Enter even number of elements: ";
-    std::cin >> n;
+int main()
+{
+    cout << "Enter even number of elements: ";
+    cin >> n;
 
-    if (n <= 0 || n > 100 || n % 2 != 0) {
-        std::cout << "Enter an even number between 2 and 100\n";
+    if (n <= 0 || n > 100 || n % 2 != 0)
+    {
+        cout << "Enter an even number between 2 and 100\n";
         return 1;
     }
 
-    std::cout << "Enter numbers:\n";
-    for (int i = 0; i < n; i++) {
-        std::cin >> a[i];
+    cout << "Enter numbers:\n";
+
+    for (int i = 0; i < n; i++)
+    {
+        cin >> a[i];
     }
 
-    std::thread t1(first_thread);
-    std::thread t2(second_thread);
+    // Create two threads
+    thread t1(first_thread);
+    thread t2(second_thread);
 
+    // Wait for both threads
     t1.join();
     t2.join();
 
-    std::cout << "First Thread Sum: " << sum1 << "\n";
-    std::cout << "Second Thread Sum: " << sum2 << "\n";
-    std::cout << "Total Sum: " << (sum1 + sum2) << "\n";
+    // Display results
+    cout << "\nFirst Thread Sum: " << sum1;
+    cout << "\nSecond Thread Sum: " << sum2;
+    cout << "\nTotal Sum: " << sum1 + sum2;
 
     return 0;
 }
