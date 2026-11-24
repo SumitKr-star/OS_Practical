@@ -112,16 +112,22 @@ cat /proc/cpuinfo
 
 ## 5. Linux Memory Information
 ```
-#include <cstdio>
-#include <fstream>
+
 #include <iostream>
+#include <fstream>
 #include <sstream>
 #include <string>
+#include <cstdio>
 
-int main() {
-    std::ifstream fp("/proc/meminfo");
-    if (!fp.is_open()) {
-        std::perror("File opening failed");
+using namespace std;
+
+int main()
+{
+    ifstream fp("/proc/meminfo");
+
+    if (!fp.is_open())
+    {
+        cout << "File opening failed\n";
         return 1;
     }
 
@@ -129,30 +135,44 @@ int main() {
     long free_mem = 0;
     long available = 0;
 
-    std::string line;
-    while (std::getline(fp, line)) {
-        std::istringstream iss(line);
-        std::string key;
+    string line;
+
+    // Read memory information
+    while (getline(fp, line))
+    {
+        istringstream iss(line);
+
+        string key;
         long value = 0;
 
-        if (iss >> key >> value) {
-            if (key == "MemTotal:") {
+        if (iss >> key >> value)
+        {
+            if (key == "MemTotal:")
+            {
                 total = value;
-            } else if (key == "MemFree:") {
+            }
+            else if (key == "MemFree:")
+            {
                 free_mem = value;
-            } else if (key == "MemAvailable:") {
+            }
+            else if (key == "MemAvailable:")
+            {
                 available = value;
             }
         }
     }
 
-    std::cout << "Total Memory: " << total << " kB\n";
-    std::cout << "Free Memory: " << free_mem << " kB\n";
-    std::cout << "Available Memory: " << available << " kB\n";
-    std::cout << "Used Memory: " << (total - free_mem) << " kB\n";
+    fp.close();
+
+    // Display memory information
+    cout << "\nTotal Memory: " << total << " kB\n";
+    cout << "Free Memory: " << free_mem << " kB\n";
+    cout << "Available Memory: " << available << " kB\n";
+    cout << "Used Memory: " << (total - free_mem) << " kB\n";
 
     return 0;
 }
+
 ```
 
 ## 6. Copy Files Using System Calls 
