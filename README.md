@@ -424,33 +424,33 @@ int main() {
 ## 10. Memory Allocation Strategies
 ```
 #include <iostream>
-
+using namespcae std;
 int main() {
     int b[20], p[20];
     int nb, np;
 
-    std::cout << "Enter number of memory blocks: ";
-    std::cin >> nb;
+    cout << "Enter number of memory blocks: ";
+    cin >> nb;
 
-    std::cout << "Enter block sizes:\n";
+    cout << "Enter block sizes:\n";
     for (int i = 0; i < nb; i++) {
-        std::cin >> b[i];
+        cin >> b[i];
     }
 
-    std::cout << "Enter number of processes: ";
-    std::cin >> np;
+    cout << "Enter number of processes: ";
+    cin >> np;
 
-    std::cout << "Enter process sizes:\n";
+    cout << "Enter process sizes:\n";
     for (int i = 0; i < np; i++) {
         std::cin >> p[i];
     }
 
     int choice;
-    std::cout << "\n1. First Fit";
-    std::cout << "\n2. Best Fit";
-    std::cout << "\n3. Worst Fit";
-    std::cout << "\nEnter choice: ";
-    std::cin >> choice;
+    cout << "\n1. First Fit";
+    cout << "\n2. Best Fit";
+    cout << "\n3. Worst Fit";
+    cout << "\nEnter choice: ";
+    cin >> choice;
 
     int temp[20], allocated[20];
 
@@ -490,13 +490,13 @@ int main() {
         }
     }
 
-    std::cout << "\nProcess\tSize\tBlock\n";
+    cout << "\nProcess\tSize\tBlock\n";
     for (int i = 0; i < np; i++) {
-        std::cout << "P" << (i + 1) << "\t" << p[i] << "\t";
+        cout << "P" << (i + 1) << "\t" << p[i] << "\t";
         if (allocated[i] == -1) {
-            std::cout << "Not Allocated\n";
+            cout << "Not Allocated\n";
         } else {
-            std::cout << "B" << (allocated[i] + 1) << "\n";
+            cout << "B" << (allocated[i] + 1) << "\n";
         }
     }
 
